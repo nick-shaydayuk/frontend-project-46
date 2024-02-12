@@ -1,0 +1,2 @@
+export const JSONResult =
+  '{\"type\":\"root\",\"children\":[{\"type\":\"removed\",\"key\":\"follow\",\"value\":false},{\"type\":\"unchanged\",\"key\":\"host\",\"value\":\"hexlet.io\"},{\"type\":\"nested\",\"key\":\"oneMoreNested\",\"children\":[{\"type\":\"unchanged\",\"key\":\"nested\",\"value\":true},{\"type\":\"added\",\"key\":\"t\",\"value\":true}]},{\"type\":\"removed\",\"key\":\"proxy\",\"value\":\"123.234.53.22\"},{\"type\":\"changed\",\"key\":\"timeout\",\"oldValue\":50,\"newValue\":20},{\"type\":\"added\",\"key\":\"verbose\",\"value\":true}]}';

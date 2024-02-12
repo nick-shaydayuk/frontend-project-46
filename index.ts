@@ -1,8 +1,8 @@
-import { readFileSync } from 'node:fs';
+import { PathLike, readFileSync } from 'node:fs';
 import path from 'node:path';
 import parser, { FormatEnum } from './parser';
-import getDifferenceTree from './getDiff';
-/* import formatter from './formatters/index.js'; */
+import getDiff from './getDiff';
+import formatter, { FormatCaseEnum } from './formatter';
 
 const resolvePath = (filePath: string) => path.resolve(process.cwd(), filePath);
 
@@ -21,24 +21,26 @@ const getExtension = (filename: string): FormatEnum => {
 
 const getData = (filePath: string) =>
   parser({
-    data: readFileSync(filePath, 'utf-8'),
+    data: readFileSync(filePath as PathLike, 'utf-8') as string,
     format: getExtension(filePath),
   });
 
 type GendiffArgs = {
   filePath1: string;
   filePath2: string;
-  format: string;
+  format?: FormatCaseEnum;
 };
 
-const gendiff = ({ filePath1, filePath2, format = 'stylish' }: GendiffArgs) => {
+const gendiff = ({ filePath1, filePath2, format = FormatCaseEnum.stylish }: GendiffArgs) => {
   const path1 = resolvePath(filePath1);
   const path2 = resolvePath(filePath2);
 
   const data1 = getData(path1);
-  const data2 = getData(path2);
+  const data2 = getData(path2);  
 
-  return getDiff(data1, data2);
+  return formatter(getDiff(data1, data2), format);
 };
 
+/* console.log(gendiff({ filePath1: './__fixtures__/file1.json', filePath2:'./__fixtures__/file2.json' }))
+ */
 export default gendiff;

@@ -11,15 +11,19 @@ export enum ChangedDataType {
 export type ChangedData = {
   type: ChangedDataType,
   key: string,
+  value?: boolean | string | number,
+  children?: ChangedData[],
+  oldValue?: any,
+  newValue?: any,
 }
 
-const loadDiff = (data1: string, data2: string) => {
+const loadDiff = (data1: any, data2: any): ChangedData[] => {
   const data1Keys = _.keys(data1);
   const data2Keys = _.keys(data2);
-  const sortedKeys = _.sortBy(_.union(data1Keys, data2Keys));
+  const sortedKeys = _.sortBy(_.union(data1Keys, data2Keys));  
 
-  const children = sortedKeys.map((key): ChangedData => {
-    if (!_.has(data1, key as string)) {
+  const children = sortedKeys.map((key: string): ChangedData => {    
+    if (!_.has(data1, key)) {
       return {
         type: ChangedDataType.added,
         key,
@@ -33,7 +37,7 @@ const loadDiff = (data1: string, data2: string) => {
         value: data1[key],
       };
     }
-    if (_.isPlainObject(data1[key]) && _.isPlainObject(data2[key])) {
+    if (_.isPlainObject(data1[key]) && _.isPlainObject(data2[key])) {      
       return {
         type: ChangedDataType.nested,
         key,
@@ -57,7 +61,12 @@ const loadDiff = (data1: string, data2: string) => {
   return children;
 };
 
-export default (data1, data2) => ({
+export type DiffDataType = {
+  type: 'root',
+  children: ChangedData[]
+}
+
+export default (data1: string, data2: string): DiffDataType => ({
   type: 'root',
   children: loadDiff(data1, data2),
 });
