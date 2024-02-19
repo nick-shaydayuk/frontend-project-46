@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import parser from './parser';
-import getDiff from './getDiff';
-import formatter from './formatter';
+import parser from './parser.js';
+import getDiff from './getDiff.js';
+import formatter from './formatter.js';
 
 const resolvePath = (filePath) => path.resolve(process.cwd(), filePath);
 
