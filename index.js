@@ -8,11 +8,10 @@ const resolvePath = (filePath) => path.resolve(process.cwd(), filePath);
 
 const getExtension = (filename) => path.extname(filename).slice(1);
 
-const getData = (filePath) =>
-  parser({
-    data: readFileSync(filePath, 'utf-8'),
-    format: getExtension(filePath),
-  });
+const getData = (filePath) => parser({
+  data: readFileSync(filePath, 'utf-8'),
+  format: getExtension(filePath),
+});
 
 const gendiff = (filePath1, filePath2, format = 'stylish') => {
   const path1 = resolvePath(filePath1);
