@@ -8,7 +8,7 @@
     "test": "npx jest --colors"
   },
   "bin": {
-    "gendiff": "bin/gendiff.js"
+    "gendiff": "gendiff.js"
   },
   "keywords": [],
   "author": "",
