@@ -1,15 +1,8 @@
 import _ from 'lodash';
-import { DiffDataType } from './getDiff';
 
-export enum FormatCaseEnum {
-  stylish = 'stylish',
-  plain = 'plain',
-  json = 'json',
-}
+const getPath = (nodeNames) => nodeNames.flat().join('.');
 
-const getPath = (nodeNames: string[]) => nodeNames.flat().join('.');
-
-const getFormattedValue = (value: string) => {
+const getFormattedValue = (value) => {
   switch (typeof value) {
     case 'object': {
       return !value ? 'null' : '[complex value]';
@@ -23,17 +16,10 @@ const getFormattedValue = (value: string) => {
   }
 };
 
-export function makePlainDiff(tree: any) {
-  const iter = (node: any, path: any) =>
+export function makePlainDiff(tree) {
+  const iter = (node, path) =>
     node.map(
-      (child: {
-        key: string;
-        type: any;
-        children: any;
-        value: string;
-        oldValue: string;
-        newValue: string;
-      }) => {
+      (child) => {
         const currentPath = getPath([path, child.key]);
         switch (child.type) {
           case 'nested': {
@@ -52,7 +38,7 @@ export function makePlainDiff(tree: any) {
             return null;
           }
           default: {
-            throw Error('Uncorrect data');
+            throw Error('Invalid data');
           }
         }
       },
@@ -60,7 +46,7 @@ export function makePlainDiff(tree: any) {
   return iter(tree.children, []);
 }
 
-export function makePlain(data: DiffDataType) {
+export function makePlain(data) {
   const result = makePlainDiff(data);
   return _.flattenDeep(result)
     .filter((el) => el)
@@ -69,34 +55,34 @@ export function makePlain(data: DiffDataType) {
 
 const indent = ' ';
 const indentSize = 4;
-const currentIndent = (depth: number) => indent.repeat(indentSize * depth - 2);
-const braceIndent = (depth: number) =>
+const currentIndent = (depth) => indent.repeat(indentSize * depth - 2);
+const braceIndent = (depth) =>
   indent.repeat(indentSize * depth - indentSize);
 
-const joinStrings = (lines: any, depth: number) =>
+const joinStrings = (lines, depth) =>
   ['{', ...lines, `${braceIndent(depth)}}`].join('\n');
 
-const stringify = (data: any, depth: number): string => {
+const stringify = (data, depth) => {
   if (!_.isObject(data) || data === null) {
     return String(data);
   }
   const keys = _.keys(data);
   const lines = keys.map(
     (key) =>
-      `${currentIndent(depth)}  ${key}: ${stringify((data as any)[key], depth + 1)}`,
+      `${currentIndent(depth)}  ${key}: ${stringify(data[key], depth + 1)}`,
   );
   return joinStrings(lines, depth);
 };
 
-const makeStylishDiff = (tree: any) => {  
-  const iter = (node: any, depth: number) => {
+const makeStylishDiff = (tree) => {  
+  const iter = (node, depth) => {
     switch (node.type) {
       case 'root': {
-        const result = node.children.flatMap((child: any) => iter(child, depth));
+        const result = node.children.flatMap((child) => iter(child, depth));
         return joinStrings(result, depth);
       }
       case 'nested': {
-        const childrenToString = node.children.flatMap((child: any) =>
+        const childrenToString = node.children.flatMap((child) =>
           iter(child, depth + 1),
         );
         return `${currentIndent(depth)}  ${node.key}: ${joinStrings(childrenToString, depth + 1)}`;
@@ -117,20 +103,20 @@ const makeStylishDiff = (tree: any) => {
         return `${currentIndent(depth)}  ${node.key}: ${stringify(node.value, depth + 1)}`;
       }
       default: {
-        throw Error('Uncorrect data');
+        throw Error('invalid data');
       }
     }
   };
   return iter(tree, 1);
 };
 
-export default (tree: DiffDataType, format: FormatCaseEnum) => {
+export default (tree, format) => {
   switch (format) {
-    case FormatCaseEnum.stylish:
+    case 'stylish':
       return makeStylishDiff(tree);
-    case FormatCaseEnum.plain:
+    case 'plain':
       return makePlain(tree);
-    case FormatCaseEnum.json:
+    case 'json':
       return JSON.stringify(tree);
     default:
       throw new Error('invalid data');
