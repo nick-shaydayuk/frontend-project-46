@@ -7,6 +7,9 @@
   "scripts": {
     "test": "npx jest --colors"
   },
+  "bin": {
+    "gendiff": "bin/gendiff.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
