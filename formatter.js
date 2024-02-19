@@ -18,31 +18,29 @@ const getFormattedValue = (value) => {
 
 export function makePlainDiff(tree) {
   const iter = (node, path) =>
-    node.map(
-      (child) => {
-        const currentPath = getPath([path, child.key]);
-        switch (child.type) {
-          case 'nested': {
-            return iter(child.children, currentPath);
-          }
-          case 'added': {
-            return `Property '${currentPath}' was added with value: ${getFormattedValue(child.value)}`;
-          }
-          case 'removed': {
-            return `Property '${currentPath}' was removed`;
-          }
-          case 'changed': {
-            return `Property '${currentPath}' was updated. From ${getFormattedValue(child.oldValue)} to ${getFormattedValue(child.newValue)}`;
-          }
-          case 'unchanged': {
-            return null;
-          }
-          default: {
-            throw Error('Invalid data');
-          }
+    node.map((child) => {
+      const currentPath = getPath([path, child.key]);
+      switch (child.type) {
+        case 'nested': {
+          return iter(child.children, currentPath);
         }
-      },
-    );
+        case 'added': {
+          return `Property '${currentPath}' was added with value: ${getFormattedValue(child.value)}`;
+        }
+        case 'removed': {
+          return `Property '${currentPath}' was removed`;
+        }
+        case 'changed': {
+          return `Property '${currentPath}' was updated. From ${getFormattedValue(child.oldValue)} to ${getFormattedValue(child.newValue)}`;
+        }
+        case 'unchanged': {
+          return null;
+        }
+        default: {
+          throw Error('Invalid data');
+        }
+      }
+    });
   return iter(tree.children, []);
 }
 
@@ -56,8 +54,7 @@ export function makePlain(data) {
 const indent = ' ';
 const indentSize = 4;
 const currentIndent = (depth) => indent.repeat(indentSize * depth - 2);
-const braceIndent = (depth) =>
-  indent.repeat(indentSize * depth - indentSize);
+const braceIndent = (depth) => indent.repeat(indentSize * depth - indentSize);
 
 const joinStrings = (lines, depth) =>
   ['{', ...lines, `${braceIndent(depth)}}`].join('\n');
@@ -74,7 +71,7 @@ const stringify = (data, depth) => {
   return joinStrings(lines, depth);
 };
 
-const makeStylishDiff = (tree) => {  
+const makeStylishDiff = (tree) => {
   const iter = (node, depth) => {
     switch (node.type) {
       case 'root': {

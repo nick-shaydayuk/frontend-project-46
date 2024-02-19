@@ -14,13 +14,12 @@ const getData = (filePath) =>
     format: getExtension(filePath),
   });
 
-
 const gendiff = (filePath1, filePath2, format = 'stylish') => {
   const path1 = resolvePath(filePath1);
   const path2 = resolvePath(filePath2);
 
   const data1 = getData(path1);
-  const data2 = getData(path2);  
+  const data2 = getData(path2);
 
   return formatter(getDiff(data1, data2), format);
 };
