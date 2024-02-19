@@ -11,13 +11,11 @@ program
   .arguments('<filePath1> <filePath2>')
   .action((filePath1, filePath2) => {
     console.log(
-      gendiff({
-        filePath1: filePath1,
-        filePath2: filePath2,
-        format: program.opts().format,
-      }),
+      gendiff(
+        filePath1,
+        filePath2,
+        program.opts().format,
+      ),
     );
   })
   .parse(process.argv);
-
-const options = program.opts();

@@ -6,18 +6,7 @@ import formatter from './formatter';
 
 const resolvePath = (filePath) => path.resolve(process.cwd(), filePath);
 
-const getExtension = (filename) => {
-  switch (path.extname(filename).slice(1)) {
-    case 'json':
-      return 'json';
-    case 'yaml':
-      return 'yaml';
-    case 'yml':
-      return 'yml';
-    default:
-      return 'json';
-  }
-};
+const getExtension = (filename) => path.extname(filename).slice(1);
 
 const getData = (filePath) =>
   parser({
@@ -26,7 +15,7 @@ const getData = (filePath) =>
   });
 
 
-const gendiff = ({ filePath1, filePath2, format = 'stylish' }) => {
+const gendiff = (filePath1, filePath2, format = 'stylish') => {
   const path1 = resolvePath(filePath1);
   const path2 = resolvePath(filePath2);
 
