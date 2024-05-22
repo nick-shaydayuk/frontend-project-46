@@ -83,7 +83,7 @@ options:
 Программа умеет выводить различия в трех форматах, по умолчанию это формат stylish. Также это могут быть plain и json. Для вывода результата согласно определенному формату введите -f [format]
 
 ```bash
-gendiff -f plain file1.json file2.yaml
+gendiff -f plain file1.json file2.yaml //etc
 ```
 
 Пример такого вывода:
